@@ -10,6 +10,7 @@ Dự án này xây dựng một luồng ETL (Extract, Transform, Load) cục b�
 > ** Tiến độ hiện tại:** Hoàn thành Giai đoạn 1 - Data Ingestion (Thu thập) & EDA (Phân tích khám phá).
 
 ## Cấu trúc dự án
+```
 llm-data-pipeline/
 ├── data/                   # (Đã được gitignore để bảo mật)
 │   ├── raw/                # Chứa dữ liệu thô tải về (.jsonl)
@@ -21,6 +22,7 @@ llm-data-pipeline/
 ├── pyproject.toml          # Quản lý dependency của dự án
 ├── mise.toml               # Khóa cứng phiên bản Python (3.11)
 └── README.md               # Tài liệu dự án
+```
 
 ## Công nghệ sử dụng (Tech Stack)
 * **Quản lý Môi trường & Package:** `mise`, `uv`.
