@@ -1,7 +1,5 @@
 import os
 import logging
-
-# TODO 1: Import hàm load_dataset từ thư viện 'datasets' của Hugging Face
 from datasets import load_dataset
 
 # Thiết lập hệ thống Logging chuẩn
@@ -18,19 +16,18 @@ def ingest_data(dataset_name: str, output_path: str):
     try:
         logging.info(f"Bắt đầu tải dataset: {dataset_name} (chỉ lấy tập train)")
 
-        # TODO 2: Gọi hàm tải dữ liệu
+        # Gọi hàm tải dữ liệu
         dataset = load_dataset(dataset_name, split="train")
 
         logging.info("Đã tải xong dữ liệu vào bộ nhớ. Đang tiến hành lưu ra file...")
 
-        # TODO 3: Lưu dataset ra file JSON Lines. Nhớ tham số force_ascii=False!
+        # Lưu dataset ra file JSON Lines.
         dataset.to_json(output_path, force_ascii=False)
 
-        logging.info(f"✅ Thành công! Dữ liệu đã được lưu tại: {output_path}")
+        logging.info(f" Thành công! Dữ liệu đã được lưu tại: {output_path}")
 
     except Exception as e:
-        # Nếu có bất kỳ lỗi gì (mất mạng, hết dung lượng), log sẽ báo màu đỏ và dừng chương trình
-        logging.error(f"❌ Quá trình tải dữ liệu thất bại: {e}")
+        logging.error(f" Quá trình tải dữ liệu thất bại: {e}")
         raise
 
 
