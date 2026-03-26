@@ -17,5 +17,5 @@ dev = [
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "I", "N"]
+lint.select = ["E", "F", "I", "N"]
 fix = true

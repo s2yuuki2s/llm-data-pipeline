@@ -55,7 +55,7 @@ source .venv/bin/activate
 
 ```bash
 # Bước 1: Tải dữ liệu thô (15.000 dòng) từ Hugging Face
-python src/ingest.py
+PYTHONPATH=. python src/ingest.py
 ```
 
 ```bash
@@ -65,7 +65,7 @@ head -n 100 data/raw/dolly_15k.jsonl > data/raw/sample_dolly.jsonl
 
 ```bash
 # Bước 3: Phân tích dữ liệu (EDA)
-python src/explore.py
+PYTHONPATH=. python src/explore.py
 ```
 
 ### 3. Kiểm tra chất lượng (Quality Control)
