@@ -1,5 +1,6 @@
 import polars as pl
 import logging
+from src.config import SAMPLE_DATA_FILE
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
@@ -51,8 +52,8 @@ def explore_data(file_path: str):
 
 
 def main():
-    file_path = "data/raw/sample_dolly.jsonl"
-    explore_data(file_path)
+    # Sử dụng cấu hình từ config.py
+    explore_data(SAMPLE_DATA_FILE)
 
 
 if __name__ == "__main__":

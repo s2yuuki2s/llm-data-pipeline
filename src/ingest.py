@@ -1,9 +1,8 @@
-import os
 import logging
 from datasets import load_dataset
+from src.config import DATASET_NAME, RAW_DATA_FILE
 
-# Thiết lập hệ thống Logging chuẩn
-# Điều này giúp in ra màn hình thời gian chạy và phân loại thông báo (INFO, ERROR)
+# Thiết lập Logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -32,15 +31,8 @@ def ingest_data(dataset_name: str, output_path: str):
 
 
 def main():
-    # Tạo thư mục nếu chưa có
-    output_dir = "data/raw"
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Khai báo đường dẫn lưu file
-    output_file = os.path.join(output_dir, "dolly_15k.jsonl")
-
-    # Gọi hàm thực thi
-    ingest_data("databricks/databricks-dolly-15k", output_file)
+    # Sử dụng cấu hình từ config.py
+    ingest_data(DATASET_NAME, RAW_DATA_FILE)
 
 
 if __name__ == "__main__":
