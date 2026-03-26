@@ -1,0 +1,10 @@
+[project]
+name = "llm-data-pipeline"
+version = "0.1.0"
+description = "ETL Pipeline for LLM Data Preparation"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets",
+    "polars",
+]
