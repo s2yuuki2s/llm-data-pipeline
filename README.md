@@ -17,55 +17,42 @@ llm-data-pipeline/
 │   ├── raw/                # Dữ liệu thô (.jsonl)
 │   └── processed/          # Dữ liệu sau khi làm sạch (.parquet)
 ├── src/
-│   ├── __init__.py         # Khởi tạo Python package
-│   ├── config.py           # Quản lý cấu hình tập trung (Đường dẫn, Dataset)
-│   ├── ingest.py           # Script tải dữ liệu từ Hugging Face
-│   └── explore.py          # Script phân tích chất lượng dữ liệu (EDA)
+│   ├── __init__.py         # Biến src thành Python package
+│   ├── config.py           # Quản lý cấu hình tập trung
+│   ├── ingest.py           # Logic tải dữ liệu
+│   └── explore.py          # Logic phân tích (EDA)
 ├── tests/
 │   ├── __init__.py
-│   └── test_basic.py       # Unit tests đảm bảo hệ thống ổn định
-├── .gitignore              # Bảo vệ dữ liệu và môi trường
-├── pyproject.toml          # Quản lý dependency & cấu hình công cụ (Ruff, Pytest)
-├── uv.lock                 # Khóa cứng phiên bản thư viện
-├── mise.toml               # Khóa cứng phiên bản Python
-└── README.md               # Tài liệu dự án
+│   └── test_basic.py       # Unit tests
+├── pyproject.toml          # Cấu hình dự án & Script Entry Points
+└── README.md
 ```
-
-## 🛠️ Công nghệ sử dụng
-*   **Quản lý Môi trường:** `uv`, `mise`.
-*   **Xử lý Dữ liệu:** `polars` (Hiệu năng cực cao), `datasets` (Hugging Face).
-*   **Chất lượng Code:** `ruff` (Linter/Formatter), `pytest` (Testing).
 
 ## 🚀 Hướng dẫn nhanh (Quick Start)
 
 ### 1. Cài đặt môi trường
-Đảm bảo bạn đã cài đặt `uv`. Clone repository và chạy các lệnh sau:
+Đảm bảo bạn đã cài đặt `uv`. Chạy lệnh sau để đồng bộ mọi thứ:
 
 ```bash
-# Đồng bộ môi trường và cài đặt thư viện
 uv sync
 ```
 
-```bash
-# Kích hoạt môi trường ảo
-source .venv/bin/activate
-```
-
-### 2. Thực thi Pipeline
+### 2. Thực thi Pipeline (Sử dụng lệnh tắt)
+Nhờ cấu hình `project.scripts` trong `pyproject.toml`, bạn có thể chạy các lệnh này ở bất cứ đâu trong dự án mà không lo về đường dẫn:
 
 ```bash
-# Bước 1: Tải dữ liệu thô (15.000 dòng) từ Hugging Face
-PYTHONPATH=. python src/ingest.py
+# Bước 1: Tải dữ liệu thô từ Hugging Face
+uv run ingest
 ```
 
 ```bash
-# Bước 2: Tạo mẫu nhỏ để test (Chạy lệnh này trong terminal)
+# Bước 2: Tạo mẫu 100 dòng để test nhanh
 head -n 100 data/raw/dolly_15k.jsonl > data/raw/sample_dolly.jsonl
 ```
 
 ```bash
 # Bước 3: Phân tích dữ liệu (EDA)
-PYTHONPATH=. python src/explore.py
+uv run explore
 ```
 
 ### 3. Kiểm tra chất lượng (Quality Control)
@@ -73,12 +60,10 @@ PYTHONPATH=. python src/explore.py
 ```bash
 # Kiểm tra lỗi code bằng Ruff
 uv run ruff check .
-```
 
-```bash
 # Chạy Unit Tests
 uv run pytest
 ```
 
 ---
-*Dự án đang trong quá trình phát triển. Các bước Transform dữ liệu sẽ được cập nhật sớm.*
+*Dự án hiện tại được cấu hình theo chuẩn Python Package hiện đại.*
