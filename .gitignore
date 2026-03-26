@@ -1,0 +1,42 @@
+# ==========================================
+# 1. DỮ LIỆU & DATABASE (TUYỆT ĐỐI BỎ QUA)
+# ==========================================
+data/
+*.csv
+*.json
+*.jsonl
+*.parquet
+*.db
+*.sqlite3
+
+# ==========================================
+# 2. MÔI TRƯỜNG PYTHON & UV
+# ==========================================
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# ==========================================
+# 3. FILE LOG & CẤU HÌNH BẢO MẬT
+# ==========================================
+*.log
+.env
+secrets.toml
+
+# ==========================================
+# 4. TRÌNH SOẠN THẢO & HỆ ĐIỀU HÀNH
+# ==========================================
+# Dành cho Neovim/Vim
+*.swp
+*.swo
+*~
+
+# Dành cho VSCode / JetBrains
+.vscode/
+.idea/
+
+# Dành cho Windows / macOS (trong trường hợp clone repo sang máy khác)
+Thumbs.db
+.DS_Store
