@@ -38,20 +38,17 @@ uv sync
 ```
 
 ### 2. Thực thi Pipeline (Sử dụng lệnh tắt)
-Nhờ cấu hình `project.scripts` trong `pyproject.toml`, bạn có thể chạy các lệnh này ở bất cứ đâu trong dự án mà không lo về đường dẫn:
+Hệ thống được thiết kế để tự động hóa tối đa:
 
 ```bash
-# Bước 1: Tải dữ liệu thô từ Hugging Face
+# Bước 1: Tải dữ liệu từ Hugging Face
+# (Sẽ tự động bỏ qua nếu dữ liệu đã tồn tại)
 uv run ingest
 ```
 
 ```bash
-# Bước 2: Tạo mẫu 100 dòng để test nhanh
-head -n 100 data/raw/dolly_15k.jsonl > data/raw/sample_dolly.jsonl
-```
-
-```bash
-# Bước 3: Phân tích dữ liệu (EDA)
+# Bước 2: Phân tích dữ liệu (EDA)
+# (Sẽ tự động tạo file sample 100 dòng nếu chưa có và phân tích)
 uv run explore
 ```
 

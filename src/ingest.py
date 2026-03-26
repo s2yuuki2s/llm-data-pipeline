@@ -8,17 +8,22 @@ logging.basicConfig(
 )
 
 
-def ingest_data(dataset_name: str, output_path: str):
+def ingest_data(dataset_name: str, output_path: str, force_download: bool = False):
     """
-    Hàm kết nối API, tải dữ liệu và lưu xuống ổ cứng.
+    Tải dữ liệu từ Hugging Face và lưu xuống ổ cứng.
+    Nếu file đã tồn tại, bỏ qua bước tải để tiết kiệm thời gian (trừ khi force_download=True).
     """
+    if output_path.exists() and not force_download:
+        logging.info(f"Dữ liệu đã tồn tại tại {output_path}. Bỏ qua bước tải.")
+        return
+
     try:
         logging.info(f"Bắt đầu tải dataset: {dataset_name} (chỉ lấy tập train)")
 
-        # Gọi hàm tải dữ liệu
+        # Tải dữ liệu
         dataset = load_dataset(dataset_name, split="train")
 
-        logging.info("Đã tải xong dữ liệu vào bộ nhớ. Đang tiến hành lưu ra file...")
+        logging.info("Đã tải xong. Đang tiến hành lưu ra file...")
 
         # Lưu dataset ra file JSON Lines.
         dataset.to_json(output_path, force_ascii=False)
@@ -31,7 +36,6 @@ def ingest_data(dataset_name: str, output_path: str):
 
 
 def main():
-    # Sử dụng cấu hình từ config.py
     ingest_data(DATASET_NAME, RAW_DATA_FILE)
 
 
