@@ -1,11 +1,14 @@
-import polars as pl
 import logging
+from pathlib import Path
+
+import polars as pl
+
 from src.config import RAW_DATA_FILE, SAMPLE_DATA_FILE
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 
-def create_sample_data(raw_path: str, sample_path: str, n_rows: int = 100):
+def create_sample_data(raw_path: Path, sample_path: Path, n_rows: int = 100):
     """
     Tự động tạo file sample từ dữ liệu thô nếu chưa có.
     Giúp quy trình chạy mượt mà không cần dùng lệnh terminal bên ngoài.
@@ -17,7 +20,7 @@ def create_sample_data(raw_path: str, sample_path: str, n_rows: int = 100):
         df_sample.write_ndjson(sample_path)
 
 
-def explore_data(file_path: str):
+def explore_data(file_path: Path):
     """
     Phân tích dữ liệu bằng Polars Lazy API (Hiệu năng cao nhất).
     """
@@ -62,7 +65,9 @@ def main():
     if SAMPLE_DATA_FILE.exists():
         explore_data(SAMPLE_DATA_FILE)
     else:
-        logging.error("Không tìm thấy dữ liệu để phân tích. Hãy chạy 'uv run ingest' trước.")
+        logging.error(
+            "Không tìm thấy dữ liệu để phân tích. Hãy chạy 'uv run ingest' trước."
+        )
 
 
 if __name__ == "__main__":

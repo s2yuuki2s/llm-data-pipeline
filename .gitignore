@@ -10,13 +10,16 @@ data/
 *.sqlite3
 
 # ==========================================
-# 2. MÔI TRƯỜNG PYTHON & UV
+# 2. MÔI TRƯỜNG PYTHON, UV & BUILD
 # ==========================================
 .venv/
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+*.egg-info/
+dist/
+build/
 
 # ==========================================
 # 3. FILE LOG & CẤU HÌNH BẢO MẬT
