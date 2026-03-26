@@ -39,12 +39,14 @@ llm-data-pipeline/
 ## 🚀 Hướng dẫn nhanh (Quick Start)
 
 ### 1. Cài đặt môi trường
-Đảm bảo bạn đã cài đặt `uv`. Clone repository và chạy:
+Đảm bảo bạn đã cài đặt `uv`. Clone repository và chạy các lệnh sau:
 
 ```bash
 # Đồng bộ môi trường và cài đặt thư viện
 uv sync
+```
 
+```bash
 # Kích hoạt môi trường ảo
 source .venv/bin/activate
 ```
@@ -54,10 +56,14 @@ source .venv/bin/activate
 ```bash
 # Bước 1: Tải dữ liệu thô (15.000 dòng) từ Hugging Face
 python src/ingest.py
+```
 
+```bash
 # Bước 2: Tạo mẫu nhỏ để test (Chạy lệnh này trong terminal)
 head -n 100 data/raw/dolly_15k.jsonl > data/raw/sample_dolly.jsonl
+```
 
+```bash
 # Bước 3: Phân tích dữ liệu (EDA)
 python src/explore.py
 ```
@@ -67,7 +73,9 @@ python src/explore.py
 ```bash
 # Kiểm tra lỗi code bằng Ruff
 uv run ruff check .
+```
 
+```bash
 # Chạy Unit Tests
 uv run pytest
 ```
