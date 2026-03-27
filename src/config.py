@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).parent.parent
 RAW_DATA_DIR = BASE_DIR / "data" / "raw"
 PROCESSED_DATA_DIR = BASE_DIR / "data" / "processed"
 
+
 # Tự động tạo thư mục khi import config
 RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)

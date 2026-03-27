@@ -1,66 +1,43 @@
-# 🚀 LLM Data Engineering Pipeline
+# LLM Data Pipeline
 
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
-![Polars](https://img.shields.io/badge/polars-fast-orange.svg)
-![uv](https://img.shields.io/badge/uv-package%20manager-purple.svg)
-![Ruff](https://img.shields.io/badge/ruff-linter-red.svg)
+Dự án này là một pipeline ETL đơn giản để xử lý dữ liệu từ Hugging Face (dataset Dolly-15k) phục vụ việc chuẩn bị dữ liệu cho LLM.
 
-## 📋 Tổng quan dự án
-Dự án này xây dựng một luồng ETL (Extract, Transform, Load) cục bộ chuẩn Production để thu thập, làm sạch và chuẩn hóa dữ liệu văn bản (`databricks-dolly-15k`), phục vụ cho việc huấn luyện các mô hình Large Language Models (LLMs).
+## Cấu trúc thư mục
+- `data/`: Chứa dữ liệu thô (raw) và dữ liệu sau khi xử lý (processed).
+- `src/`: Mã nguồn chính của dự án.
+  - `config.py`: Quản lý đường dẫn và các tham số cấu hình.
+  - `ingest.py`: Tải dữ liệu từ Hugging Face và lưu xuống local.
+  - `explore.py`: Phân tích nhanh dữ liệu (EDA) sử dụng Polars.
+- `tests/`: Các script kiểm tra cơ bản.
+- `pyproject.toml`: Khai báo thư viện và cấu hình `uv`.
 
-> ** Tiến độ hiện tại:** Hoàn thành Giai đoạn 1 - Thiết lập Framework, Ingestion & EDA.
-
-## 📂 Cấu trúc dự án
-```text
-llm-data-pipeline/
-├── data/                   # (Đã được gitignore)
-│   ├── raw/                # Dữ liệu thô (.jsonl)
-│   └── processed/          # Dữ liệu sau khi làm sạch (.parquet)
-├── src/
-│   ├── __init__.py         # Biến src thành Python package
-│   ├── config.py           # Quản lý cấu hình tập trung
-│   ├── ingest.py           # Logic tải dữ liệu
-│   └── explore.py          # Logic phân tích (EDA)
-├── tests/
-│   ├── __init__.py
-│   └── test_basic.py       # Unit tests
-├── pyproject.toml          # Cấu hình dự án & Script Entry Points
-└── README.md
-```
-
-## 🚀 Hướng dẫn nhanh (Quick Start)
-
-### 1. Cài đặt môi trường
-Đảm bảo bạn đã cài đặt `uv`. Chạy lệnh sau để đồng bộ mọi thứ:
+## Cài đặt
+Yêu cầu máy đã cài sẵn `uv`.
 
 ```bash
 uv sync
 ```
 
-### 2. Thực thi Pipeline (Sử dụng lệnh tắt)
-Hệ thống được thiết kế để tự động hóa tối đa:
+## Cách chạy
+
+### 1. Tải dữ liệu
+Lệnh này sẽ tải dataset `databricks-dolly-15k` về thư mục `data/raw/`.
 
 ```bash
-# Bước 1: Tải dữ liệu từ Hugging Face
-# (Sẽ tự động bỏ qua nếu dữ liệu đã tồn tại)
-uv run ingest
+uv run python -m src.ingest
 ```
 
+### 2. Phân tích dữ liệu
+Sử dụng Polars để kiểm tra cấu trúc dữ liệu và các thông số cơ bản.
+
 ```bash
-# Bước 2: Phân tích dữ liệu (EDA)
-# (Sẽ tự động tạo file sample 100 dòng nếu chưa có và phân tích)
-uv run explore
+uv run python -m src.explore
 ```
 
-### 3. Kiểm tra chất lượng (Quality Control)
+### 3. Kiểm tra code
+Chạy linter và unit tests để đảm bảo code không có lỗi cú pháp hoặc logic cơ bản.
 
 ```bash
-# Kiểm tra lỗi code bằng Ruff
 uv run ruff check .
-
-# Chạy Unit Tests
 uv run pytest
 ```
-
----
-*Dự án hiện tại được cấu hình theo chuẩn Python Package hiện đại.*

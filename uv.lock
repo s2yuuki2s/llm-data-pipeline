@@ -556,7 +556,7 @@ wheels = [
 [[package]]
 name = "llm-data-pipeline"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "datasets" },
     { name = "polars" },
