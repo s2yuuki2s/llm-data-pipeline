@@ -1,41 +1,41 @@
 # LLM Data Pipeline
 
-Dự án này là một pipeline ETL đơn giản để xử lý dữ liệu từ Hugging Face (dataset Dolly-15k) phục vụ việc chuẩn bị dữ liệu cho LLM.
+This project is a simple ETL pipeline to process data from Hugging Face (Dolly-15k dataset) for LLM data preparation.
 
-## Cấu trúc thư mục
-- `data/`: Chứa dữ liệu thô (raw) và dữ liệu sau khi xử lý (processed).
-- `src/`: Mã nguồn chính của dự án.
-  - `config.py`: Quản lý đường dẫn và các tham số cấu hình.
-  - `ingest.py`: Tải dữ liệu từ Hugging Face và lưu xuống local.
-  - `explore.py`: Phân tích nhanh dữ liệu (EDA) sử dụng Polars.
-- `tests/`: Các script kiểm tra cơ bản.
-- `pyproject.toml`: Khai báo thư viện và cấu hình `uv`.
+## Directory Structure
+- `data/`: Contains raw data and processed data.
+- `src/`: Main source code of the project.
+  - `config.py`: Manages paths and configuration parameters.
+  - `ingest.py`: Downloads data from Hugging Face and saves it locally.
+  - `explore.py`: Fast data analysis (EDA) using Polars.
+- `tests/`: Basic test scripts.
+- `pyproject.toml`: Library declarations and `uv` configuration.
 
-## Cài đặt
-Yêu cầu máy đã cài sẵn `uv`.
+## Installation
+Requires `uv` to be installed on your system.
 
 ```bash
 uv sync
 ```
 
-## Cách chạy
+## How to Run
 
-### 1. Tải dữ liệu
-Lệnh này sẽ tải dataset `databricks-dolly-15k` về thư mục `data/raw/`.
+### 1. Data Ingestion
+This command will download the `databricks-dolly-15k` dataset to the `data/raw/` directory.
 
 ```bash
 uv run python -m src.ingest
 ```
 
-### 2. Phân tích dữ liệu
-Sử dụng Polars để kiểm tra cấu trúc dữ liệu và các thông số cơ bản.
+### 2. Data Exploration
+Use Polars to check the data structure and basic statistics.
 
 ```bash
 uv run python -m src.explore
 ```
 
-### 3. Kiểm tra code
-Chạy linter và unit tests để đảm bảo code không có lỗi cú pháp hoặc logic cơ bản.
+### 3. Code Quality Check
+Run the linter and unit tests to ensure no syntax or basic logic errors.
 
 ```bash
 uv run ruff check .

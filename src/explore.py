@@ -10,37 +10,37 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 def create_sample_data(raw_path: Path, sample_path: Path, n_rows: int = 100):
     """
-    Tự động tạo file sample từ dữ liệu thô nếu chưa có.
-    Giúp quy trình chạy mượt mà không cần dùng lệnh terminal bên ngoài.
+    Automatically create a sample file from raw data if it doesn't exist.
+    Ensures a smooth workflow without requiring external terminal commands.
     """
     if not sample_path.exists():
-        logging.info(f"Đang tạo file sample ({n_rows} dòng) tại: {sample_path}")
-        # Dùng Lazy API để lấy 100 dòng đầu tiên cực nhanh
+        logging.info(f"Creating sample file ({n_rows} rows) at: {sample_path}")
+        # Use Lazy API to fetch the first 100 rows very quickly
         df_sample = pl.scan_ndjson(raw_path).head(n_rows).collect()
         df_sample.write_ndjson(sample_path)
 
 
 def explore_data(file_path: Path):
     """
-    Phân tích dữ liệu bằng Polars Lazy API (Hiệu năng cao nhất).
+    Analyze data using Polars Lazy API (Highest performance).
     """
     try:
-        logging.info(f"Đang phân tích dữ liệu (Lazy Mode) từ: {file_path}")
+        logging.info(f"Analyzing data (Lazy Mode) from: {file_path}")
 
-        # Khởi tạo LazyFrame (Chưa đọc dữ liệu vào RAM ngay)
+        # Initialize LazyFrame (Data not read into RAM immediately)
         lf = pl.scan_ndjson(file_path)
 
-        # Thực thi các truy vấn và thu thập kết quả (collect)
+        # Execute queries and collect results
         df = lf.collect()
 
-        logging.info("\n========== BÁO CÁO CHẤT LƯỢNG DỮ LIỆU ==========")
+        logging.info("\n========== DATA QUALITY REPORT ==========")
 
         print(f"\n1. Schema:\n{df.collect_schema()}")
-        print(f"\n2. Kích thước (Shape):\n{df.shape}")
+        print(f"\n2. Shape:\n{df.shape}")
         print(f"\n3. Null Count:\n{df.null_count()}")
         print(f"\n4. Duplicates:\n{df.is_duplicated().sum()}")
 
-        # Kiểm tra chuỗi rỗng trong context
+        # Check for empty strings in context
         empty_context = df.filter(
             pl.col("context").str.strip_chars().str.len_bytes() == 0
         ).height
@@ -49,24 +49,24 @@ def explore_data(file_path: Path):
         print("\n6. Top Categories:")
         print(df["category"].value_counts(sort=True).head(10))
 
-        logging.info("\n========== HOÀN THÀNH BÁO CÁO ==========")
+        logging.info("\n========== REPORT COMPLETE ==========")
 
     except Exception as e:
-        logging.error(f" Lỗi trong quá trình phân tích: {e}")
+        logging.error(f" Error during analysis: {e}")
         raise
 
 
 def main():
-    # 1. Tự động kiểm tra và tạo sample nếu chưa có
+    # 1. Automatically check and create sample if it doesn't exist
     if RAW_DATA_FILE.exists():
         create_sample_data(RAW_DATA_FILE, SAMPLE_DATA_FILE)
 
-    # 2. Chạy EDA trên file sample
+    # 2. Run EDA on the sample file
     if SAMPLE_DATA_FILE.exists():
         explore_data(SAMPLE_DATA_FILE)
     else:
         logging.error(
-            "Không tìm thấy dữ liệu để phân tích. Hãy chạy 'uv run ingest' trước."
+            "Data not found for analysis. Please run 'uv run python -m src.ingest' first."
         )
 
 
