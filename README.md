@@ -95,7 +95,3 @@ llm-data-pipeline/
 ├── run_pipeline.sh      # Orchestration script
 └── pyproject.toml       # Dependency management
 ```
-
----
-
-**Contact:** [Your Name] - Data Engineering Portfolio
