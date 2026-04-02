@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "datasets",
     "polars",
+    "pyspark>=3.5.0",
 ]
 
 [tool.uv]
@@ -17,3 +18,11 @@ dev = [
     "pytest",
     "ruff",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 80
+indent-width = 4

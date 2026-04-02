@@ -1,18 +1,15 @@
-import os
-
-from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-
+from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, RAW_DATA_FILE
 
 def test_config_paths():
     """
-    Kiểm tra xem các thư mục dữ liệu có tồn tại không.
+    Verify that data directories are initialized correctly.
     """
-    assert os.path.exists(RAW_DATA_DIR)
-    assert os.path.exists(PROCESSED_DATA_DIR)
+    assert RAW_DATA_DIR.exists()
+    assert PROCESSED_DATA_DIR.exists()
 
-def test_file_naming():
+def test_file_naming_conventions():
     """
-    Kiểm tra định dạng file dữ liệu.
+    Ensure input data adheres to the expected JSONL format.
     """
-    from src.config import RAW_DATA_FILE
-    assert RAW_DATA_FILE.name.endswith(".jsonl")
+    assert RAW_DATA_FILE.suffix == ".jsonl"
+    assert "dolly" in RAW_DATA_FILE.name.lower()

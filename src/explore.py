@@ -1,74 +1,70 @@
+"""
+EDA Module (Exploratory Data Analysis)
+=====================================
+Leverages Polars Lazy API for ultra-fast profiling of raw datasets.
+"""
+
 import logging
 from pathlib import Path
-
 import polars as pl
-
 from src.config import RAW_DATA_FILE, SAMPLE_DATA_FILE
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-
-def create_sample_data(raw_path: Path, sample_path: Path, n_rows: int = 100):
+def profile_raw_data(file_path: Path):
     """
-    Automatically create a sample file from raw data if it doesn't exist.
-    Ensures a smooth workflow without requiring external terminal commands.
-    """
-    if not sample_path.exists():
-        logging.info(f"Creating sample file ({n_rows} rows) at: {sample_path}")
-        # Use Lazy API to fetch the first 100 rows very quickly
-        df_sample = pl.scan_ndjson(raw_path).head(n_rows).collect()
-        df_sample.write_ndjson(sample_path)
-
-
-def explore_data(file_path: Path):
-    """
-    Analyze data using Polars Lazy API (Highest performance).
+    Analyzes raw JSONL data using Polars for high-performance profiling.
     """
     try:
-        logging.info(f"Analyzing data (Lazy Mode) from: {file_path}")
+        logging.info(f"Scanning raw dataset (Lazy Mode): {file_path}")
 
-        # Initialize LazyFrame (Data not read into RAM immediately)
+        # Scan as LazyFrame (won't load to RAM until 'collect' is called)
         lf = pl.scan_ndjson(file_path)
-
-        # Execute queries and collect results
         df = lf.collect()
 
-        logging.info("\n========== DATA QUALITY REPORT ==========")
-
+        logging.info("--- Data Quality Report ---")
+        
+        # 1. Basic Stats
         print(f"\n1. Schema:\n{df.collect_schema()}")
-        print(f"\n2. Shape:\n{df.shape}")
-        print(f"\n3. Null Count:\n{df.null_count()}")
-        print(f"\n4. Duplicates:\n{df.is_duplicated().sum()}")
+        print(f"\n2. Dimensions:\nRows: {df.height:,}, Columns: {df.width}")
+        
+        # 2. Null Analysis
+        null_stats = df.null_count()
+        print(f"\n3. Null Values:\n{null_stats}")
+        
+        # 3. Duplicate Detection
+        dup_count = df.is_duplicated().sum()
+        print(f"\n4. Duplicate Rows: {dup_count:,}")
 
-        # Check for empty strings in context
+        # 4. Context Empty Analysis (LLM specific)
         empty_context = df.filter(
             pl.col("context").str.strip_chars().str.len_bytes() == 0
         ).height
-        print(f"\n5. Empty Contexts: {empty_context}")
+        print(f"\n5. Empty/Whitespace Contexts: {empty_context:,}")
 
-        print("\n6. Top Categories:")
+        # 5. Category Distribution
+        print("\n6. Category Distribution (Top 10):")
         print(df["category"].value_counts(sort=True).head(10))
 
-        logging.info("\n========== REPORT COMPLETE ==========")
+        logging.info("Profiling complete.")
 
     except Exception as e:
-        logging.error(f" Error during analysis: {e}")
+        logging.error(f"Error during EDA: {e}")
         raise
 
+def create_sample(raw_path: Path, sample_path: Path, n_rows: int = 100):
+    """Generates a smaller sample file for rapid testing."""
+    if not sample_path.exists():
+        logging.info(f"Creating sample file ({n_rows} rows) at {sample_path}")
+        df_sample = pl.scan_ndjson(raw_path).head(n_rows).collect()
+        df_sample.write_ndjson(sample_path)
 
 def main():
-    # 1. Automatically check and create sample if it doesn't exist
     if RAW_DATA_FILE.exists():
-        create_sample_data(RAW_DATA_FILE, SAMPLE_DATA_FILE)
-
-    # 2. Run EDA on the sample file
-    if SAMPLE_DATA_FILE.exists():
-        explore_data(SAMPLE_DATA_FILE)
+        create_sample(RAW_DATA_FILE, SAMPLE_DATA_FILE)
+        profile_raw_data(RAW_DATA_FILE)
     else:
-        logging.error(
-            "Data not found for analysis. Please run 'uv run python -m src.ingest' first."
-        )
-
+        logging.error("Raw data file not found. Run ingestion first.")
 
 if __name__ == "__main__":
     main()

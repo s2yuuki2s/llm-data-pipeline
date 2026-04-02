@@ -43,3 +43,18 @@ secrets.toml
 # Dành cho Windows / macOS (trong trường hợp clone repo sang máy khác)
 Thumbs.db
 .DS_Store
+
+# ==========================================
+# 5. JAVA & SPARK TEMPORARY FILES
+# ==========================================
+*.class
+metastore_db/
+derby.log
+spark-warehouse/
+
+# ==========================================
+# 6. TEMPORARY FILES
+# ==========================================
+.markdownlint-passed
+*.tmp
+*.temp
