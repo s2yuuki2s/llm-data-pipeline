@@ -1,5 +1,7 @@
 # LLM Data ETL Pipeline (PySpark)
 
+![CI Pipeline](https://github.com/s2yuuki2s/llm-data-pipeline/actions/workflows/ci.yml/badge.svg)
+
 A production-ready ETL pipeline designed for processing and cleaning LLM
 instruction tuning datasets (Dolly-15k). This project demonstrates modern Data
 Engineering practices including distributed processing with PySpark, data
