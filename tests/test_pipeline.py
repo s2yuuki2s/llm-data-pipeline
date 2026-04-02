@@ -1,6 +1,5 @@
 import json
 import pytest
-from pathlib import Path
 from src.transform import (
     create_spark_session,
     load_raw_data,
