@@ -20,8 +20,18 @@ def spark():
 @pytest.fixture
 def sample_df(spark):
     data = [
-        ("What is Python?", "Context here", "Python is a language", "general_qa"),
-        ("  Dirty Text  ", None, "  This is a valid response length.  ", "general_qa"),
+        (
+            "What is Python?",
+            "Context here",
+            "Python is a language",
+            "general_qa",
+        ),
+        (
+            "  Dirty Text  ",
+            None,
+            "  This is a valid response length.  ",
+            "general_qa",
+        ),
         (
             "What is Python?",
             "Context here",
@@ -40,7 +50,9 @@ def test_clean_data(sample_df):
     assert cleaned.count() == 3
 
     # Check trimming
-    dirty_row = cleaned.filter(F.col("instruction") == "Dirty Text").collect()[0]
+    dirty_row = cleaned.filter(F.col("instruction") == "Dirty Text").collect()[
+        0
+    ]
     assert dirty_row["instruction"] == "Dirty Text"
     assert dirty_row["response"] == "This is a valid response length."
 
@@ -55,7 +67,9 @@ def test_enrich_data(spark, sample_df):
     assert "instruction_length" in enriched.columns
     assert "combined_text" in enriched.columns
 
-    row = enriched.filter(F.col("instruction") == "What is Python?").collect()[0]
+    row = enriched.filter(F.col("instruction") == "What is Python?").collect()[
+        0
+    ]
     assert row["instruction_length"] == len("What is Python?")
     assert "Instruction:" in row["combined_text"]
 

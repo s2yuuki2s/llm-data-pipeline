@@ -9,7 +9,10 @@ from pathlib import Path
 import polars as pl
 from src.config import RAW_DATA_FILE, SAMPLE_DATA_FILE
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def profile_raw_data(file_path: Path):
     """
@@ -23,15 +26,15 @@ def profile_raw_data(file_path: Path):
         df = lf.collect()
 
         logging.info("--- Data Quality Report ---")
-        
+
         # 1. Basic Stats
         print(f"\n1. Schema:\n{df.collect_schema()}")
         print(f"\n2. Dimensions:\nRows: {df.height:,}, Columns: {df.width}")
-        
+
         # 2. Null Analysis
         null_stats = df.null_count()
         print(f"\n3. Null Values:\n{null_stats}")
-        
+
         # 3. Duplicate Detection
         dup_count = df.is_duplicated().sum()
         print(f"\n4. Duplicate Rows: {dup_count:,}")
@@ -52,6 +55,7 @@ def profile_raw_data(file_path: Path):
         logging.error(f"Error during EDA: {e}")
         raise
 
+
 def create_sample(raw_path: Path, sample_path: Path, n_rows: int = 100):
     """Generates a smaller sample file for rapid testing."""
     if not sample_path.exists():
@@ -59,12 +63,14 @@ def create_sample(raw_path: Path, sample_path: Path, n_rows: int = 100):
         df_sample = pl.scan_ndjson(raw_path).head(n_rows).collect()
         df_sample.write_ndjson(sample_path)
 
+
 def main():
     if RAW_DATA_FILE.exists():
         create_sample(RAW_DATA_FILE, SAMPLE_DATA_FILE)
         profile_raw_data(RAW_DATA_FILE)
     else:
         logging.error("Raw data file not found. Run ingestion first.")
+
 
 if __name__ == "__main__":
     main()
