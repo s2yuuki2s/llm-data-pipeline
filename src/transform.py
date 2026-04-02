@@ -52,7 +52,11 @@ def get_dolly_schema() -> StructType:
 def load_raw_data(spark: SparkSession, input_path: Path) -> DataFrame:
     """Read raw JSONL data with enforced schema."""
     logging.info(f"Extracting raw data: {input_path}")
-    return spark.read.format("json").schema(get_dolly_schema()).load(str(input_path))
+    return (
+        spark.read.format("json")
+        .schema(get_dolly_schema())
+        .load(str(input_path))
+    )
 
 
 def clean_data(df: DataFrame) -> DataFrame:
@@ -63,7 +67,7 @@ def clean_data(df: DataFrame) -> DataFrame:
     - Removes exact record duplicates.
     """
     logging.info("Transform Stage 1: Cleansing...")
-    
+
     # Standardize null/empty contexts to empty strings
     df_clean = df.withColumn(
         "context",
@@ -100,9 +104,14 @@ def enrich_data(df: DataFrame) -> DataFrame:
             "combined_text",
             F.concat_ws(
                 "\n\n",
-                F.lit("Instruction: "), F.col("instruction"),
-                F.when(F.col("has_context"), F.concat(F.lit("\nContext: "), F.col("context"))).otherwise(F.lit("")),
-                F.lit("\nResponse: "), F.col("response"),
+                F.lit("Instruction: "),
+                F.col("instruction"),
+                F.when(
+                    F.col("has_context"),
+                    F.concat(F.lit("\nContext: "), F.col("context")),
+                ).otherwise(F.lit("")),
+                F.lit("\nResponse: "),
+                F.col("response"),
             ),
         )
     )
@@ -127,7 +136,7 @@ def compute_audit_log(spark: SparkSession, df: DataFrame) -> dict:
     """
     logging.info("Transform Stage 4: Executing SQL-based audit...")
     df.createOrReplaceTempView("transformed_data")
-    
+
     summary = spark.sql("""
         SELECT 
             COUNT(*) as total_records,
@@ -142,7 +151,7 @@ def compute_audit_log(spark: SparkSession, df: DataFrame) -> dict:
         "avg_instruction_len": round(summary["avg_instruction_len"], 2),
         "avg_response_len": round(summary["avg_response_len"], 2),
         "unique_categories": summary["unique_categories"],
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
 
@@ -151,8 +160,10 @@ def save_processed_data(df: DataFrame, output_path: Path):
     Saves transformed data in partitioned Parquet format.
     Optimizes storage and query performance via category-based partitioning.
     """
-    logging.info(f"Loading data into sink: {output_path} (Partitioned by Category)")
-    
+    logging.info(
+        f"Loading data into sink: {output_path} (Partitioned by Category)"
+    )
+
     (
         df.write.mode("overwrite")
         .partitionBy("category")
@@ -166,30 +177,30 @@ def main():
     spark = None
     try:
         spark = create_spark_session()
-        
+
         if not RAW_DATA_FILE.exists():
-            logging.error(f"❌ Input missing at {RAW_DATA_FILE}")
+            logging.error(f" Input missing at {RAW_DATA_FILE}")
             return
 
         # Pipeline Orchestration
         df_raw = load_raw_data(spark, RAW_DATA_FILE)
-        
+
         df_clean = clean_data(df_raw)
         df_enriched = enrich_data(df_clean)
         df_final = filter_data(df_enriched)
-        
+
         # Sink Data (Partitioned Parquet)
         save_processed_data(df_final, PROCESSED_DATA_FILE)
-        
+
         # Data Quality Audit
         audit_logs = compute_audit_log(spark, df_final)
-        
+
         # Persist audit findings for monitoring
         audit_path = PROCESSED_DATA_FILE.parent / "audit_log.json"
         with open(audit_path, "w") as f:
             json.dump(audit_logs, f, indent=4)
-        
-        logging.info(f"📊 Pipeline Success: {audit_logs}")
+
+        logging.info(f" Pipeline Success: {audit_logs}")
 
     except Exception as e:
         logging.error(f"Pipeline execution failed: {e}")
@@ -197,7 +208,7 @@ def main():
     finally:
         if spark:
             spark.stop()
-            logging.info("🛑 SparkSession terminated.")
+            logging.info(" SparkSession terminated.")
 
 
 if __name__ == "__main__":
