@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Use an official Python runtime as a parent image (pin to bookworm for stable Java 17)
+FROM python:3.11-slim-bookworm
 
 # Install OpenJDK 17 (Required for PySpark)
 RUN apt-get update && \
@@ -10,8 +10,8 @@ RUN apt-get update && \
 # Set environment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$PATH:$JAVA_HOME/bin
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install uv (modern package manager)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
